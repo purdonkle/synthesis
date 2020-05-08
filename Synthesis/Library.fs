@@ -83,11 +83,45 @@ let toBinary input =
     findBin input ""
     //failwith "Not implemented"
 
-let bizFuzz _ =
-    failwith "Not implemented"
+let bizFuzz n = 
+    match (n < 0) with
+    | true -> (0,0,0)
+    | false -> (((n - n%3)/3) , ((n - n%5)/5) , ((n - n%15)/15))
+    //failwith "Not implemented"
 
-let monthDay _ _ =
-    failwith "Not implemented"
+let monthDay d y =
+    let rec getMonth days monthNum =
+       let monthName, numDays = month monthNum
+       match days <= numDays with
+       | true -> monthName
+       | false -> getMonth (days - numDays) (monthNum + 1)
 
-let coord _ =
-    failwith "Not implemented"
+    match isLeap y with
+    | true -> 
+        match (d >= 1 && d <= 366) with
+        | false -> failwith "invalid day"
+        | true -> match (d > 32) with
+                  | true -> getMonth (d-1) 1
+                  | false -> getMonth d 1
+    | false ->
+        match (d >= 1 && d <= 365) with
+        | false -> failwith "invalid day"
+        | true -> getMonth d 1
+    //failwith "Not implemented"
+
+let coord (x1,x2,y1,y2) =
+    let sqrt n =
+        let rec calculate guess i =
+            match i with
+            | 10 -> guess
+            | _ -> 
+            let g = (guess + n/guess) / 2.0
+            calculate g (i+1)
+
+        match n <= 0.0 with
+        | true -> failwith "Impossibru!"
+        | _ -> calculate (n/2.0) 0
+
+    let distance = sqrt ((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
+    distance
+    //failwith "Not implemented"
